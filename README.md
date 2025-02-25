@@ -1,3 +1,5 @@
+[![CodeQL Advanced](https://github.com/rahulthedevil/Jira-Context-MCP/actions/workflows/codeql.yml/badge.svg)](https://github.com/rahulthedevil/Jira-Context-MCP/actions/workflows/codeql.yml)
+
 # Jira Context MCP
 
 A Model Context Protocol (MCP) implementation for Jira that allows you to:
