@@ -13,7 +13,7 @@ A Model Context Protocol (MCP) implementation for Jira that allows you to:
 
 - Node.js 20.17.0 or higher
 - A Jira account with API access
-- A Jira API token (can be generated at https://id.atlassian.com/manage-profile/security/api-tokens)
+- A Jira API token (can be generated at [Atlassian API Tokens](https://id.atlassian.com/manage-profile/security/api-tokens))
 
 ### Installation
 
@@ -75,73 +75,106 @@ pnpm start:cli
 
 ### Connecting with Cursor
 
-1. In Cursor, open Command Palette (Ctrl+Shift+P or Cmd+Shift+P)
-2. Type "Connect to MCP Server"
-3. Select "Connect to MCP Server"
-4. Enter the server URL (http://localhost:3000/sse by default)
+1. In Cursor, open the Command Palette (Ctrl+Shift+P or Cmd+Shift+P)
+2. Type **"Connect to MCP Server"**
+3. Select **"Connect to MCP Server"**
+4. Enter the server URL (default: `http://localhost:3000/sse`)
 
-### Available Tools
+## Available Tools
 
 Once connected, you can use the following tools in Cursor:
 
-#### 1. Get Jira Issue Details
+### 1. Get Jira Issue Details
 
-Use this to fetch detailed information about a specific Jira issue:
-
+Fetch detailed information about a specific Jira issue:
 ```
 /get_issue issueKey:PROJECT-123
 ```
 
-#### 2. Get Assigned Issues
+### 2. Get Assigned Issues
 
 Retrieve issues assigned to you in a specific project:
-
 ```
 /get_assigned_issues projectKey:PROJECT maxResults:10
 ```
 
-#### 3. Get Issues by Type
+### 3. Get Issues by Type
 
 Filter issues by type (Bug, Story, Epic, etc.):
-
 ```
 /get_issues_by_type issueType:Bug projectKey:PROJECT maxResults:10
 ```
 
-#### 4. Get Projects
+### 4. Get Projects
 
 List all available projects:
-
 ```
 /get_projects
 ```
 
-#### 5. Get Issue Types
+### 5. Get Issue Types
 
 List all available issue types:
-
 ```
 /get_issue_types
 ```
+
+### 6. Get Recent Ticket Changes
+
+Retrieve changes made in tickets over a specified period (e.g., the last 7 days) in a project:
+```
+/get_recent_changes projectKey:PROJECT maxDays:7
+```
+
+## Command Examples
+
+🚀 **Jira MCP Server + Cursor IDE = Your AI-powered Jira assistant!** Here’s how it makes devs work smarter:
+
+📂 **"List all Jira projects I have access to"**  
+→ AI fetches all available projects instantly  
+No more searching manually!
+
+📋 **"List all issues in PROJECT"**  
+→ AI retrieves all open tickets  
+Stay organized without effort!
+
+🐛 **"Filter only Bugs or Change Requests and fix them"**  
+→ AI identifies & directs Cursor to resolve them  
+Fix issues faster with automation!
+
+✅ **"Find all tickets assigned to me and fix them"**  
+→ AI pulls your tasks & lets Cursor handle them  
+Stay on top of your work with zero hassle!
+
+🔍 **"Get details for Jira issue PROJECT-123"**  
+→ AI fetches full issue info in seconds  
+No more switching tabs!
+
+📊 **"What changed in tickets in the last 7 days in PROJECT?"**  
+→ AI tracks recent updates & highlights key changes  
+No more manually checking ticket histories!
+
+🔥 **TL;DR:** Your AI now speaks Jira + Cursor! Fetch projects, filter issues, track changes & fix bugs—all inside your IDE.  
+From backlog to bug fixes, MCP Server makes Jira work for you!
 
 ## Example Workflows
 
 ### Fix a Specific Bug
 
-1. Connect to the Jira MCP server in Cursor
+1. Connect to the Jira MCP server in Cursor.
 2. Get the issue details:
    ```
    /get_issue issueKey:PROJECT-123
    ```
-3. Review the issue details and ask Cursor to fix it:
+3. Review the issue details and instruct Cursor to fix it:
    ```
    Fix the bug described in PROJECT-123
    ```
 
 ### Work on Your Assigned Issues
 
-1. Connect to the Jira MCP server in Cursor
-2. Get your assigned issues:
+1. Connect to the Jira MCP server in Cursor.
+2. Retrieve your assigned issues:
    ```
    /get_assigned_issues projectKey:PROJECT
    ```
@@ -152,15 +185,24 @@ List all available issue types:
 
 ### Fix All Bugs in a Project
 
-1. Connect to the Jira MCP server in Cursor
-2. Get all bug issues:
+1. Connect to the Jira MCP server in Cursor.
+2. Retrieve all bug issues:
    ```
    /get_issues_by_type issueType:Bug projectKey:PROJECT
    ```
-3. Ask Cursor to help fix them:
+3. Instruct Cursor:
    ```
-   Help me solve these bugs one by one
+   Help me fix these bugs one by one
    ```
+
+### Review Recent Changes
+
+1. Connect to the Jira MCP server in Cursor.
+2. Retrieve recent ticket updates:
+   ```
+   /get_recent_changes projectKey:PROJECT maxDays:7
+   ```
+3. Review the changes to stay updated on modifications.
 
 ## Development
 
@@ -180,8 +222,8 @@ To add new tools, edit the `src/server.ts` file and add new tool definitions in 
 
 ## License
 
-MIT 
+MIT
 
 ## Author
 
-Rahul Dey - [@rahulthedevil](https://github.com/rahulthedevil) 
+Rahul Dey - [@rahulthedevil](https://github.com/rahulthedevil)
