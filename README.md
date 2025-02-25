@@ -1,8 +1,11 @@
-[![CodeQL Advanced](https://github.com/rahulthedevil/Jira-Context-MCP/actions/workflows/codeql.yml/badge.svg)](https://github.com/rahulthedevil/Jira-Context-MCP/actions/workflows/codeql.yml)
-
 # Jira Context MCP
-
+[![CodeQL Advanced](https://github.com/rahulthedevil/Jira-Context-MCP/actions/workflows/codeql.yml/badge.svg)](https://github.com/rahulthedevil/Jira-Context-MCP/actions/workflows/codeql.yml)
 [![smithery badge](https://smithery.ai/badge/@rahulthedevil/Jira-Context-MCP)](https://smithery.ai/server/@rahulthedevil/Jira-Context-MCP)
+<figure>
+    <a href="https://glama.ai/mcp/servers/a8ob8depqc">
+     <img width="380" height="200" src="https://glama.ai/mcp/servers/a8ob8depqc/badge" />
+   </a>
+</figure>
 
 A Model Context Protocol (MCP) implementation for Jira that allows you to:
 
