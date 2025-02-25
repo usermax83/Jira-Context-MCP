@@ -1,5 +1,7 @@
 # Jira Context MCP
 
+[![smithery badge](https://smithery.ai/badge/@rahulthedevil/Jira-Context-MCP)](https://smithery.ai/server/@rahulthedevil/Jira-Context-MCP)
+
 A Model Context Protocol (MCP) implementation for Jira that allows you to:
 
 - Input a Jira ticket link to fetch issue details and instruct Cursor to fix it
@@ -16,6 +18,16 @@ A Model Context Protocol (MCP) implementation for Jira that allows you to:
 - A Jira API token (can be generated at https://id.atlassian.com/manage-profile/security/api-tokens)
 
 ### Installation
+
+#### Installing via Smithery
+
+To install Jira Context MCP for Claude Desktop automatically via [Smithery](https://smithery.ai/server/@rahulthedevil/Jira-Context-MCP):
+
+```bash
+npx -y @smithery/cli install @rahulthedevil/Jira-Context-MCP --client claude
+```
+
+#### Installing manually
 
 1. Clone this repository:
    ```bash
