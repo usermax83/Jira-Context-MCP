@@ -1,3 +1,5 @@
+[![MseeP.ai Security Assessment Badge](https://mseep.net/pr/rahulthedevil-jira-context-mcp-badge.png)](https://mseep.ai/app/rahulthedevil-jira-context-mcp)
+
 # Jira Context MCP
 [![CodeQL Advanced](https://github.com/rahulthedevil/Jira-Context-MCP/actions/workflows/codeql.yml/badge.svg)](https://github.com/rahulthedevil/Jira-Context-MCP/actions/workflows/codeql.yml)
 [![smithery badge](https://smithery.ai/badge/@rahulthedevil/Jira-Context-MCP)](https://smithery.ai/server/@rahulthedevil/Jira-Context-MCP)
