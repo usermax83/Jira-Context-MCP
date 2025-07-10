@@ -3,6 +3,7 @@
 # Jira Context MCP
 [![CodeQL Advanced](https://github.com/rahulthedevil/Jira-Context-MCP/actions/workflows/codeql.yml/badge.svg)](https://github.com/rahulthedevil/Jira-Context-MCP/actions/workflows/codeql.yml)
 [![smithery badge](https://smithery.ai/badge/@rahulthedevil/Jira-Context-MCP)](https://smithery.ai/server/@rahulthedevil/Jira-Context-MCP)
+[![Verified on MseeP](https://mseep.ai/badge.svg)](https://mseep.ai/app/d3bb0c74-58fd-4683-a3c7-99cc0342eecc)
 <figure>
     <a href="https://glama.ai/mcp/servers/a8ob8depqc">
      <img width="380" height="200" src="https://glama.ai/mcp/servers/a8ob8depqc/badge" />
