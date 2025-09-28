@@ -173,7 +173,7 @@ export class JiraService {
       maxResults,
       fields: [
         "summary",
-        "description",
+        "description", 
         "status",
         "issuetype",
         "priority",
@@ -182,6 +182,115 @@ export class JiraService {
         "parent",
       ],
     });
+  }
+
+  /**
+   * Get summary of non-DONE issues under an epic
+   */
+  async getEpicSummary(epicKey: string): Promise<{
+    epic: JiraIssue;
+    totalIssues: number;
+    nonDoneIssues: number;
+    doneIssues: number;
+    issuesByStatus: Record<string, number>;
+    issuesByType: Record<string, number>;
+    issuesByPriority: Record<string, number>;
+    unassignedIssues: number;
+    nonDoneTickets: Array<{
+      key: string;
+      summary: string;
+      status: string;
+      type: string;
+      priority: string;
+      assignee: string | null;
+    }>;
+  }> {
+    // First get the epic details
+    const epic = await this.getIssue(epicKey);
+    
+    // Get all issues under the epic (no limit to get complete picture)
+    const allIssuesResponse = await this.searchIssues({
+      jql: `parent = "${epicKey}" ORDER BY status ASC, priority DESC`,
+      maxResults: 1000, // Large number to get all issues
+      fields: [
+        "summary",
+        "status",
+        "issuetype", 
+        "priority",
+        "assignee",
+      ],
+    });
+
+    const issues = allIssuesResponse.issues;
+    const totalIssues = issues.length;
+
+    // Initialize counters
+    const issuesByStatus: Record<string, number> = {};
+    const issuesByType: Record<string, number> = {};
+    const issuesByPriority: Record<string, number> = {};
+    let doneIssues = 0;
+    let unassignedIssues = 0;
+    const nonDoneTickets: Array<{
+      key: string;
+      summary: string;
+      status: string;
+      type: string;
+      priority: string;
+      assignee: string | null;
+    }> = [];
+
+    // Process each issue
+    issues.forEach(issue => {
+      const status = issue.fields.status.name;
+      const type = issue.fields.issuetype.name;
+      const priority = issue.fields.priority?.name || 'None';
+      const assignee = issue.fields.assignee?.displayName || null;
+
+      // Count by status
+      issuesByStatus[status] = (issuesByStatus[status] || 0) + 1;
+      
+      // Count by type
+      issuesByType[type] = (issuesByType[type] || 0) + 1;
+      
+      // Count by priority
+      issuesByPriority[priority] = (issuesByPriority[priority] || 0) + 1;
+
+      // Check if done (common done status names)
+      const isDone = ['Done', 'Closed', 'Resolved', 'Complete', 'Completed'].includes(status);
+      
+      if (isDone) {
+        doneIssues++;
+      } else {
+        // Add to non-done tickets
+        nonDoneTickets.push({
+          key: issue.key,
+          summary: issue.fields.summary,
+          status,
+          type,
+          priority,
+          assignee,
+        });
+      }
+
+      // Count unassigned
+      if (!assignee) {
+        unassignedIssues++;
+      }
+    });
+
+    const nonDoneIssues = totalIssues - doneIssues;
+
+    return {
+      epic,
+      totalIssues,
+      nonDoneIssues,
+      doneIssues,
+      issuesByStatus,
+      issuesByType,
+      issuesByPriority,
+      unassignedIssues,
+      nonDoneTickets,
+    };
   }
 
   /**

@@ -240,6 +240,71 @@ export class JiraMcpServer {
         }
       }
     );
+
+    // Tool to get summary of non-DONE issues under an epic
+    this.server.tool(
+      "get_epic_summary",
+      "Get summary of non-DONE tickets under an epic with statistics",
+      {
+        epicKey: z
+          .string()
+          .describe(
+            "The key of the epic to summarize (e.g., PROJECT-123)"
+          ),
+      },
+      async ({ epicKey }) => {
+        try {
+          console.log(`Fetching epic summary for: ${epicKey}`);
+          const summary = await this.jiraService.getEpicSummary(epicKey);
+          console.log(
+            `Successfully generated summary for epic ${epicKey}: ${summary.nonDoneIssues}/${summary.totalIssues} issues remaining`
+          );
+          
+          // Format the response for better readability
+          const formattedSummary = {
+            epic: {
+              key: summary.epic.key,
+              summary: summary.epic.fields.summary,
+              status: summary.epic.fields.status.name,
+            },
+            statistics: {
+              totalIssues: summary.totalIssues,
+              doneIssues: summary.doneIssues,
+              nonDoneIssues: summary.nonDoneIssues,
+              unassignedIssues: summary.unassignedIssues,
+              completionPercentage: summary.totalIssues > 0 ? 
+                Math.round((summary.doneIssues / summary.totalIssues) * 100) : 0,
+            },
+            breakdown: {
+              byStatus: summary.issuesByStatus,
+              byType: summary.issuesByType,
+              byPriority: summary.issuesByPriority,
+            },
+            nonDoneTickets: summary.nonDoneTickets,
+          };
+
+          return {
+            content: [
+              { type: "text", text: JSON.stringify(formattedSummary, null, 2) },
+            ],
+          };
+        } catch (error) {
+          console.error(`Error fetching epic summary for ${epicKey}:`, error);
+          const errorMessage =
+            error instanceof Error
+              ? error.message
+              : JSON.stringify(error, null, 2);
+          return {
+            content: [
+              {
+                type: "text",
+                text: `Error fetching epic summary: ${errorMessage}`,
+              },
+            ],
+          };
+        }
+      }
+    );
   }
 
   async connect(transport: Transport): Promise<void> {
