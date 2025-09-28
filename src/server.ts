@@ -27,13 +27,17 @@ export class JiraMcpServer {
       "get_issue",
       "Get detailed information about a Jira issue",
       {
-        issueKey: z.string().describe("The key of the Jira issue to fetch (e.g., PROJECT-123)"),
+        issueKey: z
+          .string()
+          .describe("The key of the Jira issue to fetch (e.g., PROJECT-123)"),
       },
       async ({ issueKey }) => {
         try {
           console.log(`Fetching issue: ${issueKey}`);
           const issue = await this.jiraService.getIssue(issueKey);
-          console.log(`Successfully fetched issue: ${issue.key} - ${issue.fields.summary}`);
+          console.log(
+            `Successfully fetched issue: ${issue.key} - ${issue.fields.summary}`
+          );
           return {
             content: [{ type: "text", text: JSON.stringify(issue, null, 2) }],
           };
@@ -43,7 +47,7 @@ export class JiraMcpServer {
             content: [{ type: "text", text: `Error fetching issue: ${error}` }],
           };
         }
-      },
+      }
     );
 
     // Tool to get assigned issues
@@ -51,24 +55,44 @@ export class JiraMcpServer {
       "get_assigned_issues",
       "Get issues assigned to the current user in a project",
       {
-        projectKey: z.string().optional().describe("The key of the Jira project to fetch issues from"),
-        maxResults: z.number().optional().describe("Maximum number of results to return"),
+        projectKey: z
+          .string()
+          .optional()
+          .describe("The key of the Jira project to fetch issues from"),
+        maxResults: z
+          .number()
+          .optional()
+          .describe("Maximum number of results to return"),
       },
       async ({ projectKey, maxResults }) => {
         try {
-          console.log(`Fetching assigned issues${projectKey ? ` for project: ${projectKey}` : ''}`);
-          const response = await this.jiraService.getAssignedIssues(projectKey, maxResults);
-          console.log(`Successfully fetched ${response.issues.length} assigned issues`);
+          console.log(
+            `Fetching assigned issues${projectKey ? ` for project: ${projectKey}` : ""}`
+          );
+          const response = await this.jiraService.getAssignedIssues(
+            projectKey,
+            maxResults
+          );
+          console.log(
+            `Successfully fetched ${response.issues.length} assigned issues`
+          );
           return {
-            content: [{ type: "text", text: JSON.stringify(response, null, 2) }],
+            content: [
+              { type: "text", text: JSON.stringify(response, null, 2) },
+            ],
           };
         } catch (error) {
           console.error(`Error fetching assigned issues:`, error);
           return {
-            content: [{ type: "text", text: `Error fetching assigned issues: ${error}` }],
+            content: [
+              {
+                type: "text",
+                text: `Error fetching assigned issues: ${error}`,
+              },
+            ],
           };
         }
-      },
+      }
     );
 
     // Tool to get issues by type
@@ -76,25 +100,45 @@ export class JiraMcpServer {
       "get_issues_by_type",
       "Get issues of a specific type",
       {
-        issueType: z.string().describe("The type of issue to fetch (e.g., Bug, Story, Epic)"),
-        projectKey: z.string().optional().describe("The key of the Jira project to fetch issues from"),
-        maxResults: z.number().optional().describe("Maximum number of results to return"),
+        issueType: z
+          .string()
+          .describe("The type of issue to fetch (e.g., Bug, Story, Epic)"),
+        projectKey: z
+          .string()
+          .optional()
+          .describe("The key of the Jira project to fetch issues from"),
+        maxResults: z
+          .number()
+          .optional()
+          .describe("Maximum number of results to return"),
       },
       async ({ issueType, projectKey, maxResults }) => {
         try {
-          console.log(`Fetching issues of type: ${issueType}${projectKey ? ` for project: ${projectKey}` : ''}`);
-          const response = await this.jiraService.getIssuesByType(issueType, projectKey, maxResults);
-          console.log(`Successfully fetched ${response.issues.length} issues of type ${issueType}`);
+          console.log(
+            `Fetching issues of type: ${issueType}${projectKey ? ` for project: ${projectKey}` : ""}`
+          );
+          const response = await this.jiraService.getIssuesByType(
+            issueType,
+            projectKey,
+            maxResults
+          );
+          console.log(
+            `Successfully fetched ${response.issues.length} issues of type ${issueType}`
+          );
           return {
-            content: [{ type: "text", text: JSON.stringify(response, null, 2) }],
+            content: [
+              { type: "text", text: JSON.stringify(response, null, 2) },
+            ],
           };
         } catch (error) {
           console.error(`Error fetching issues by type:`, error);
           return {
-            content: [{ type: "text", text: `Error fetching issues by type: ${error}` }],
+            content: [
+              { type: "text", text: `Error fetching issues by type: ${error}` },
+            ],
           };
         }
-      },
+      }
     );
 
     // Tool to get projects
@@ -108,15 +152,19 @@ export class JiraMcpServer {
           const projects = await this.jiraService.getProjects();
           console.log(`Successfully fetched ${projects.length} projects`);
           return {
-            content: [{ type: "text", text: JSON.stringify(projects, null, 2) }],
+            content: [
+              { type: "text", text: JSON.stringify(projects, null, 2) },
+            ],
           };
         } catch (error) {
           console.error("Error fetching projects:", error);
           return {
-            content: [{ type: "text", text: `Error fetching projects: ${error}` }],
+            content: [
+              { type: "text", text: `Error fetching projects: ${error}` },
+            ],
           };
         }
-      },
+      }
     );
 
     // Tool to get issue types
@@ -130,15 +178,67 @@ export class JiraMcpServer {
           const issueTypes = await this.jiraService.getIssueTypes();
           console.log(`Successfully fetched issue types`);
           return {
-            content: [{ type: "text", text: JSON.stringify(issueTypes, null, 2) }],
+            content: [
+              { type: "text", text: JSON.stringify(issueTypes, null, 2) },
+            ],
           };
         } catch (error) {
           console.error("Error fetching issue types:", error);
           return {
-            content: [{ type: "text", text: `Error fetching issue types: ${error}` }],
+            content: [
+              { type: "text", text: `Error fetching issue types: ${error}` },
+            ],
           };
         }
+      }
+    );
+
+    // Tool to get issues under an epic
+    this.server.tool(
+      "get_epic_issues",
+      "Get issues under a specific epic",
+      {
+        epicKey: z
+          .string()
+          .describe(
+            "The key of the epic to get issues for (e.g., PROJECT-123)"
+          ),
+        maxResults: z
+          .number()
+          .optional()
+          .describe("Maximum number of results to return"),
       },
+      async ({ epicKey, maxResults }) => {
+        try {
+          console.log(`Fetching issues under epic: ${epicKey}`);
+          const response = await this.jiraService.getEpicIssues(
+            epicKey,
+            maxResults
+          );
+          console.log(
+            `Successfully fetched ${response.issues.length} issues under epic ${epicKey}`
+          );
+          return {
+            content: [
+              { type: "text", text: JSON.stringify(response, null, 2) },
+            ],
+          };
+        } catch (error) {
+          console.error(`Error fetching issues under epic ${epicKey}:`, error);
+          const errorMessage =
+            error instanceof Error
+              ? error.message
+              : JSON.stringify(error, null, 2);
+          return {
+            content: [
+              {
+                type: "text",
+                text: `Error fetching issues under epic: ${errorMessage}`,
+              },
+            ],
+          };
+        }
+      }
     );
   }
 
@@ -155,7 +255,7 @@ export class JiraMcpServer {
       console.log("New SSE connection established");
       this.sseTransport = new SSEServerTransport(
         "/messages",
-        res as unknown as ServerResponse<IncomingMessage>,
+        res as unknown as ServerResponse<IncomingMessage>
       );
       await this.server.connect(this.sseTransport);
     });
@@ -167,14 +267,16 @@ export class JiraMcpServer {
       }
       await this.sseTransport.handlePostMessage(
         req as unknown as IncomingMessage,
-        res as unknown as ServerResponse<IncomingMessage>,
+        res as unknown as ServerResponse<IncomingMessage>
       );
     });
 
     app.listen(port, () => {
       console.log(`HTTP server listening on port ${port}`);
       console.log(`SSE endpoint available at http://localhost:${port}/sse`);
-      console.log(`Message endpoint available at http://localhost:${port}/messages`);
+      console.log(
+        `Message endpoint available at http://localhost:${port}/messages`
+      );
     });
   }
-} 
+}

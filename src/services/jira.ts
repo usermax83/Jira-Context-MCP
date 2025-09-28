@@ -49,11 +49,17 @@ export class JiraService {
       return response.data;
     } catch (error) {
       if (error instanceof AxiosError && error.response) {
+        const errorData = error.response.data;
+        console.error(
+          "Jira API Error Response:",
+          JSON.stringify(errorData, null, 2)
+        );
         throw {
           status: error.response.status,
           err:
-            (error.response.data as { errorMessages?: string[] })
-              ?.errorMessages?.[0] || "Unknown error",
+            (errorData as { errorMessages?: string[] })?.errorMessages?.[0] ||
+            (errorData as { message?: string })?.message ||
+            "Unknown error",
         } as JiraError;
       }
       throw new Error(
@@ -149,6 +155,33 @@ export class JiraService {
     const endpoint = `/rest/api/3/project`;
     const response = await this.request<JiraProject[]>(endpoint);
     return response;
+  }
+
+  /**
+   * Get issues under an epic
+   */
+  async getEpicIssues(
+    epicKey: string,
+    maxResults: number = 50
+  ): Promise<JiraSearchResponse> {
+    // JQL to find issues that are children of the epic
+    // Start with parent field which is the modern approach
+    const jql = `parent = "${epicKey}" ORDER BY updated DESC`;
+
+    return this.searchIssues({
+      jql,
+      maxResults,
+      fields: [
+        "summary",
+        "description",
+        "status",
+        "issuetype",
+        "priority",
+        "assignee",
+        "project",
+        "parent",
+      ],
+    });
   }
 
   /**
